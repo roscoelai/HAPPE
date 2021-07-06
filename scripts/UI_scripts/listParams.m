@@ -102,7 +102,7 @@ elseif params.layout_type(1,1) == 5; fprintf(['%i channel Brain Products ' ...
         'Wet Sponge R-Net for actiCHamp Plus\n'], params.layout_type(1,2)) ;
 elseif params.layout_type(1,1) == 5; fprintf(['%i channel Neuroscan SynAmps ' ...
         'Net\n'], params.layout_type(1,2)) ;
-elseif params.layout_type(1,1) == 7; fprintf('Other\n') ;
+elseif params.layout_type(1,1) == 7; fprintf('Unspecified\n') ;
 end
 
 %% Channels of Interest

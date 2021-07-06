@@ -160,10 +160,11 @@ while true
 
             % .MAT FILES:
             if params.datafileformat == 0
+                fprintf('Number of channels: \n') ;
                 % List files that are supported - need to have chanlocs files
                 % imbedded in HAPPE
                 if params.layout_type(1,1) == 1; fprintf(['For EGI GSN nets,' ...
-                        'HAPPE supports 64 channels in .mat format.\n']) ;
+                        ' HAPPE supports 64 channels in .mat format.\n']) ;
                 elseif params.layout_type(1,1) == 2; fprintf(['For EGI HydroCel ' ...
                         'GSN nets, HAPPE supports 32, 64, 128, and 256 ' ...
                         'channels in .mat format.\n']) ;
@@ -211,6 +212,7 @@ while true
 
             % .RAW files
             elseif params.datafileformat == 1
+                fprintf('Number of channels: \n') ;
                 if params.layout_type(1,1) == 1; fprintf(['For EGI GSN nets,' ...
                         'HAPPE supports 64 channels in .raw format.\n']) ;
                 elseif params.layout_type(1,1) == 2; fprintf(['For EGI ' ...
@@ -235,12 +237,15 @@ while true
                 if ~choose2('n','y'); error(['For .set files, the 10-20 channels ' ...
                         'must be labeled.']) ;
                 end
+                fprintf('Number of channels: \n') ;
+                params.layout_type(1,2) = input('> ') ;
 
             % .CDT files
             elseif params.datafileformat == 3
                 if params.layout_type(1,1) ~= 6; error(['To run a .cdt file, the net ' ...
                         'must be a NeuroScan layout.']) ;
                 else
+                    fprintf('Number of channels: \n') ;
                     params.layout_type(1,2) = input(['For Neuroscan Quik-Caps, ' ...
                         'HAPPE supports 32, 64, and 128 channels.\nNumber of ' ...
                         'leads/channels:\n> ']) ;

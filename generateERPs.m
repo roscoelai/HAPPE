@@ -70,7 +70,7 @@ while true
         indx = 1 ;
         fprintf(['Enter channels, including the preceding letter, one at a' ...
             ' time.\nPress enter/return between each entry.\nExamples: E17' ...
-            '/n          M1\nWhen you have entered all channels, input ' ...
+            '\n          M1\nWhen you have entered all channels, input ' ...
             '"done" (without quotations).\n']) ;
         while true
             u_input = input('> ', 's') ;
@@ -187,7 +187,7 @@ end
 %% CREATE ERP ARRAY FOR EACH FILE
 allSubsAve = [] ;
 for currfile = 1:size(FileNames, 2)
-%     try
+     try
         % LOAD THE FILE
         currsub = importdata(FileNames{currfile}) ;
         if currfile == 1 && calcVals
@@ -267,9 +267,9 @@ for currfile = 1:size(FileNames, 2)
                     aucValsZeros, fiftyALZeros, currfile) ;
             end
         end
-%     catch
-%         fprintf("Unable to generate ERP for file %s.\n", FileNames{currfile}) ;
-%     end
+    catch
+        fprintf("Error in file %s.\n", FileNames{currfile}) ;
+    end
 end
 currfile = currfile + 1;
 %% PLOT ERP WAVEFORMS
@@ -383,8 +383,16 @@ if calcVals
 end
     
 %% SAVE OUT AS CSV
+erps_save = ['allSubjects_generatedERPs' suffix '_' datestr(now, 'dd-mm-yyyy') '.csv'] ;
+indx = 2 ;
+while isfile(erps_save)
+    erps_save = ['allSubjectsERPvals_' suffix '_' datestr(now, 'dd-mm-yyyy') ...
+        '_' num2str(indx) '.csv'] ;
+    indx = indx + 1 ;
+end
+
 allSubsAve = array2table(allSubsAve, 'VariableNames', [FileNames 'Average']) ;
-writetable(allSubsAve, ['allSubjects_generatedERPs' suffix '.csv']) ;
+writetable(allSubsAve, erps_save) ;
 
 %-------------------------------------------------------------------------%
 %% FUNCTIONS USED TO CALCULATE ER
