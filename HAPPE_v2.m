@@ -148,7 +148,7 @@ if reprocessing
     disp("  new = Save new files") ;
     if choose2('overwrite', 'new')
         disp("Use default or custom suffix for processed set?") ;
-        disp("  default = Default name (inputParameters_dd-mm-yyyy.mat).") ;
+        disp("  default = Default name (_rerun_dd-mm-yyyy.mat).") ;
         disp("  custom = Create your own file name.") ;
         if choose2("custom", "default"); rerun_suffix = ['_rerun_' datestr(now, 'dd-mm-yyyy')] ;
         else; rerun_suffix = input('Enter custom suffix:\n> ', 's') ;
@@ -784,7 +784,7 @@ for current_file = 1:length(FileNames)
                 elseif EEG.srate <= 250; wavLevel = 11 ;
                 else; wavLevel = 7 ; 
                 end
-            else; wavLevel = 9 ; 
+            else; wavLevel = 9 ;
             end
 
             % LEGACY WAVELET:
@@ -824,7 +824,7 @@ for current_file = 1:length(FileNames)
                 % Low-Density Data: Uses hard threshold - not used for ERPs
                 if params.low_density && ~params.ERP_analysis
                     artifacts = wdenoise(reshape(EEG.data, size(EEG.data, 1), ...
-                        [])', wavLevel, 'Wavelet', 'coif4', 'DenoisingMethod', ...
+                        [])', 10, 'Wavelet', 'coif4', 'DenoisingMethod', ...
                         'Bayes', 'ThresholdRule', 'Hard', 'NoiseEstimate', ...
                         'LevelDependent')' ;
                 % Otherwise: Uses soft threshold
