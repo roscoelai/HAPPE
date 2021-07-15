@@ -524,7 +524,7 @@ for current_file = 1:length(FileNames)
                 elseif params.datafileformat == 1
                     load('happe_netdata_lib.mat') ;
                     net = aquiLayout_getInfo(params.layout_type, netdata_lib) ;
-                    chan_IDs = net.leads_all ;
+                    fullchans = net.leads_all ;
                 % For files with imbedded channel locations, use the full
                 % list of channels included in the file.
                 else
