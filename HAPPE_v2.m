@@ -758,9 +758,9 @@ for current_file = 1:length(FileNames)
                 selected_channel_labels = {selected_good_channel_locations.labels} ;
                 bad_channels_removed = setdiff(params.chan_IDs, selected_channel_labels, ...
                     'stable') ;
-                if exist('params.ROI_channels', 'var')
+                if isfield(params, 'ROI_channels')
                     [~,ROI_indices_in_selected_chanlocs] = intersect(selected_channel_labels, ...
-                        params.ROI_channels,'stable') ;
+                        params.ROI_channels, 'stable') ;
                 end
             end
             
