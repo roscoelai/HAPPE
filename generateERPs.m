@@ -242,11 +242,11 @@ for currfile = 1:size(FileNames, 2)
         % COMPILE MEANS
         currSubAve = mean(subjSet,2) ;
         allSubsAve = [allSubsAve currSubAve] ;
-        currSubAve_noBL = currSubAve(find(lats==0):size(currSubAve,1),:) ;
         
         % CALCULATE VALUES
         if calcVals
             % CREATE WINDOWS
+            currSubAve_noBL = currSubAve(find(lats==0):size(currSubAve,1),:) ;
             [currSubWindows, currSubGlobal] = createWindows(lats, ...
                 currSubAve_noBL, windows) ;
             
@@ -278,9 +278,9 @@ plot(allSubsAve) ;
 figure() ;
 disp("Figure 2: Mean ERP across all subjects") ;
 totalMean = mean(allSubsAve, 2) ;
-totalMean_noBL = totalMean(find(lats==0):size(totalMean,1),:) ;
 if calcVals
     % Create the windows
+    totalMean_noBL = totalMean(find(lats==0):size(totalMean,1),:) ;
     [currSubWindows, currSubGlobal] = createWindows(lats, totalMean_noBL, ...
         windows) ;
     
