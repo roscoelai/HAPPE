@@ -27,6 +27,10 @@
 %% SET FOLDERS FOR HAPPE AND EEGLAB PATHS
 clear ;
 disp('Preparing HAPPE - ERP ADD-ON...') ;
+happe_directory_path = fileparts(which(mfilename('fullpath'))) ;
+addpath([happe_directory_path filesep 'scripts'], ...
+    [happe_directory_path filesep 'scripts' filesep 'UI_scripts'], ...
+    [happe_directory_path filesep 'Packages' filesep 'MARA-master']);
 
 %% DETERMINE AND SET PATH TO DATA
 % Use input from the command line to set the path to the data. If an 
