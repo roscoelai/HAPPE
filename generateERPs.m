@@ -398,12 +398,10 @@ end
 %% SAVE OUT TIMESERIES AS CSV
 erps_save = ['allSubjects_generatedERPs' suffix '_' datestr(now, 'dd-mm-yyyy') '.csv'] ;
 indx = 2 ;
-if calcVals
-    while isfile(erps_save)
-        erps_save = ['allSubjectsERPvals' suffix '_' datestr(now, 'dd-mm-yyyy') ...
-            '_' num2str(indx) '.csv'] ;
-        indx = indx + 1 ;
-    end
+while isfile(erps_save)
+    erps_save = ['allSubjects_generatedERPs' suffix '_' datestr(now, 'dd-mm-yyyy') ...
+        '_' num2str(indx) '.csv'] ;
+    indx = indx + 1 ;
 end
 
 allSubsAve = array2table(allSubsAve, 'VariableNames', [FileNames 'Average']) ;
