@@ -72,7 +72,7 @@ clear ;
 disp('Preparing HAPPE...') ;
 % SET HAPPE AND EEGLAB PATHS
 happe_directory_path = fileparts(which(mfilename('fullpath'))) ;
-eeglab_path = [happe_directory_path filesep 'Packages' filesep 'eeglab2020_0'] ;
+eeglab_path = [happe_directory_path filesep 'Packages' filesep 'eeglab2021.0'] ;
 
 % ADD HAPPE AND REQUIRED SUBFOLDERS TO THE PATH
 addpath([happe_directory_path filesep 'acquisition_layout_information'], ...
@@ -83,7 +83,7 @@ addpath([happe_directory_path filesep 'acquisition_layout_information'], ...
 rmpath(genpath([eeglab_path filesep 'functions' filesep 'octavefunc']));
 
 % ADD EEGLAB AND REQUIRED SUBFOLDERS TO THE PATH  
-% *** Eventually allow users to set own eeglab path. For now, assume eeglab2020_0
+% *** Eventually allow users to set own eeglab path. For now, assume eeglab2021.0
 plugin_directories = dir([eeglab_path filesep 'plugins']) ;
 plugin_directories = strcat(eeglab_path, filesep, 'plugins', filesep, ...
     {plugin_directories.name}, ';') ;
@@ -878,7 +878,7 @@ for current_file = 1:length(FileNames)
             [cxy, f] = mscohere(postWavEEG', preWavEEG', 1000, 0, ...
                 freqsofinterest, EEG.srate) ;
             % Store waveleting pipeline QC
-            wav_means = [wav_means; [(RMSE_alldata) (MAE_alldata) ...
+            wav_means = [wav_means; [(RMSE_alldata) (MAE_alldata) (SNR_alldata)...
                 (PeakSNR_alldata) (cross_corr) mean(cxy, 2, 'omitnan')']] ;
 
             %% INDEPENDENT COMPONENT ANALYSIS (ICA)
@@ -1412,7 +1412,7 @@ if ~reprocessing
         'SNR post/pre wav-rejection', 'PeakSNR post/pre wav-threshold', ...
         'r alldata pre/post wav-threshold'} ;
     for i = 1:size(freqsofinterest,2)
-        wav_names{i+4} = ['r ' num2str(freqsofinterest(i)) 'hz post/pre wav-threshold'] ;
+        wav_names{i+5} = ['r ' num2str(freqsofinterest(i)) 'hz post/pre wav-threshold'] ;
     end
     if ~params.low_density && ~params.ERP_analysis
         % ICA Metrics:

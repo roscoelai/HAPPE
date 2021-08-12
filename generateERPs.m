@@ -29,8 +29,7 @@ clear ;
 disp('Preparing HAPPE - ERP ADD-ON...') ;
 happe_directory_path = fileparts(which(mfilename('fullpath'))) ;
 addpath([happe_directory_path filesep 'scripts'], ...
-    [happe_directory_path filesep 'scripts' filesep 'UI_scripts'], ...
-    [happe_directory_path filesep 'Packages' filesep 'MARA-master']);
+    [happe_directory_path filesep 'scripts' filesep 'UI_scripts']);
 
 %% DETERMINE AND SET PATH TO DATA
 % Use input from the command line to set the path to the data. If an 
@@ -190,6 +189,7 @@ end
 
 %% CREATE ERP ARRAY FOR EACH FILE
 allSubsAve = [] ;
+firstError = 0 ;
 for currfile = 1:size(FileNames, 2)
      try
         % LOAD THE FILE
@@ -273,15 +273,24 @@ for currfile = 1:size(FileNames, 2)
         end
     catch
         fprintf("Error in file %s.\n", FileNames{currfile}) ;
+        % Fill the errored col with NaN
+        if isempty(allSubsAve); firstError = 1 ;
+        else
+            allSubsAve(:,currfile) = NaN(size(allSubsAve,1),1) ;
+        end
+        
     end
 end
 currfile = currfile + 1;
+if firstError
+   allSubsAve = [NaN(size(allSubsAve,1),1), allSubsAve] ;
+end
 %% PLOT ERP WAVEFORMS
 disp("Figure 1: All subjects' ERP without mean") ;
 plot(allSubsAve) ;
 figure() ;
 disp("Figure 2: Mean ERP across all subjects") ;
-totalMean = mean(allSubsAve, 2) ;
+totalMean = mean(allSubsAve, 2, 'omitnan') ;
 if calcVals
     % Create the windows
     totalMean_noBL = totalMean(find(lats==0):size(totalMean,1),:) ;
@@ -386,13 +395,15 @@ if calcVals
         true);
 end
     
-%% SAVE OUT AS CSV
+%% SAVE OUT TIMESERIES AS CSV
 erps_save = ['allSubjects_generatedERPs' suffix '_' datestr(now, 'dd-mm-yyyy') '.csv'] ;
 indx = 2 ;
-while isfile(erps_save)
-    erps_save = ['allSubjectsERPvals_' suffix '_' datestr(now, 'dd-mm-yyyy') ...
-        '_' num2str(indx) '.csv'] ;
-    indx = indx + 1 ;
+if calcVals
+    while isfile(erps_save)
+        erps_save = ['allSubjectsERPvals' suffix '_' datestr(now, 'dd-mm-yyyy') ...
+            '_' num2str(indx) '.csv'] ;
+        indx = indx + 1 ;
+    end
 end
 
 allSubsAve = array2table(allSubsAve, 'VariableNames', [FileNames 'Average']) ;

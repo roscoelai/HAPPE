@@ -89,7 +89,7 @@ elseif params.datafileformat == 4; fprintf('.mff (EGI)\n') ;
 end
 
 %% Aquisition Layout
-fprintf('Aquisition Layout: ') ;
+fprintf('Acquisition Layout: ') ;
 if params.layout_type(1,1) == 1; fprintf(['%i channel EGI Geodesic Sensor ' ...
         'Net\n'], params.layout_type(1,2)) ;
 elseif params.layout_type(1,1) == 2; fprintf(['%i channel EGI HydroCel ' ...
