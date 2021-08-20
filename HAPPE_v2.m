@@ -1109,7 +1109,7 @@ for current_file = 1:length(FileNames)
         % interpolating channels scoring above/below z threshold of 3 for 
         % a segment: Code adapted from FASTER program (Nolan et al., 2010).
         % Not available if bad channel detection was not performed.
-        if params.segment_interpolation
+        if params.segment_interpolation && ~isempty(EEG.epoch)
             disp("Interpolating bad data...") ;
             eeg_chans = [1:length(selected_good_channel_locations)] ;
             ext_chans = [] ;
@@ -1149,7 +1149,7 @@ for current_file = 1:length(FileNames)
         % reject segments. If indicated by user, will only use the
         % specified region of interest. Otherwise, will examine all
         % channels.
-        if params.segment_rejection
+        if params.segment_rejection && ~isempty(EEG.epoch)
             disp('Rejecting segments...')
             % APPLY AMPLITUDE CRITERIA:
             if strcmpi(params.seg_rej_method, 'amplitude') || ... 
@@ -1200,7 +1200,9 @@ for current_file = 1:length(FileNames)
                 EEG = pop_rejepoch(EEG, [EEG.reject.rejglobal], 0) ;
                 EEG = pop_saveset(EEG, 'filename', strrep(FileNames{current_file}, ...
                     src_file_ext, ['_segments_postreject' rerun_suffix '.set'])) ;
-            end  
+            end
+        elseif isempty(EEG.epoch)
+            disp('Only one segment in dataset. No segment rejection performed.') ;
         end
 
         %% INTERPOLATE BAD CHANNELS
@@ -1314,7 +1316,7 @@ for current_file = 1:length(FileNames)
                 % Set file for the complete EEG
                 EEG = pop_saveset(EEG, 'filename', strrep(FileNames{current_file}, ...
                     src_file_ext, ['_processed' rerun_suffix '.set'])) ;
-                % Set files for each EEG by tag.
+                % .set files for each EEG by tag.
                 if size(params.task_onset_tags,2) > 1
                     for i=1:length(eeg_byTags)
                         eeg_byTags(i) = pop_saveset(eeg_byTags(i), 'filename', ...
@@ -1328,11 +1330,27 @@ for current_file = 1:length(FileNames)
             case 2
                 save(strrep(FileNames{current_file}, src_file_ext, ...
                     ['_processed' rerun_suffix '.mat']), 'EEG') ;
+                if params.ERP_analysis && size(params.task_onset_tags, 2) > 1
+                    for i=1:length(eeg_byTags)
+                        currEEG = eeg_byTags(i) ;
+                        save(strrep(FileNames{current_file}, src_file_ext, ...
+                            ['_' params.task_onset_tags{i} '_processed' ...
+                            rerun_suffix '.mat']), 'currEEG') ;
+                    end
+                end
             
             % SAVE AS SET FILE:    
             case 3
                 EEG = pop_saveset(EEG, 'filename', strrep(FileNames{current_file}, ...
                     src_file_ext,['_processed' rerun_suffix '.set'])) ;
+                if size(params.task_onset_tags,2) > 1
+                    for i=1:length(eeg_byTags)
+                        eeg_byTags(i) = pop_saveset(eeg_byTags(i), 'filename', ...
+                            strrep(FileNames{current_file}, src_file_ext, ...
+                            ['_' params.task_onset_tags{i} '_processed' rerun_suffix ...
+                            '.set']));
+                    end
+                end
         end
 
         %% GENERATE POWER SPECTRUM AND TOPOPLOT VISUALIZATION (if enabled)
