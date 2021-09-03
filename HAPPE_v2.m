@@ -867,9 +867,9 @@ for current_file = 1:length(FileNames)
             % WAVELETING QC METRICS
             disp('Evaluating wavelet thresholding...') ;
             % Root Mean Squared Error (RMSE):
-            RMSE_alldata = calcRMSE(preWavEEG, postWavEEG, 2) ;
+            RMSE_alldata = calcRMSE(preWavEEG, postWavEEG) ;
             % Mean Absolute Error (MAE):
-            MAE_alldata = calcMAE(preWavEEG, postWavEEG, 2) ;
+            MAE_alldata = calcMAE(preWavEEG, postWavEEG) ;
             % Signal to Noise Ratio (SNR) AND Peak Signal to Noise Ratio (PSNR):
             [SNR_alldata, PeakSNR_alldata] = calcSNR_PSNR(preWavEEG, postWavEEG, 2) ;
             % Cross Correlation Across Data and by Channel:
@@ -941,9 +941,9 @@ for current_file = 1:length(FileNames)
                 % Reshape EEG to channels x samples format
                 EEG2DICA = reshape(EEG.data, size(EEG.data,1), []) ;
                 % RMSE:
-                RMSE_alldata = calcRMSE(EEG2DICA, postWavEEG, 1) ;
+                RMSE_alldata = calcRMSE(EEG2DICA, postWavEEG) ;
                 % MAE:
-                MAE_alldata = calcMAE(EEG2DICA, postWavEEG, 1) ;
+                MAE_alldata = calcMAE(EEG2DICA, postWavEEG) ;
                 % SNR and PSNR:
                 [SNR_alldata, PeakSNR_alldata] = calcSNR_PSNR(EEG2DICA, postWavEEG, 1) ;
                 % Cross Correlation Across Data and by Channel:
@@ -960,9 +960,9 @@ for current_file = 1:length(FileNames)
                 EEG_preAR = reshape(EEG_preAR.data, size(EEG_preAR.data,1), []) ;
                 EEG_postAR = reshape(EEG_postAR.data, size(EEG_postAR.data, 1), []) ;
                 % RMSE:
-                RMSE_alldata = calcRMSE(EEG_postAR, EEG_preAR, 1) ;
+                RMSE_alldata = calcRMSE(EEG_postAR, EEG_preAR) ;
                 % MAE:
-                MAE_alldata = calcMAE(EEG_postAR, EEG_postAR, 1) ;
+                MAE_alldata = calcMAE(EEG_postAR, EEG_postAR) ;
                 % SNR AND PSNR:
                 [SNR_alldata, PeakSNR_alldata] = calcSNR_PSNR(EEG_postAR, EEG_preAR, 1) ;
                 % Cross Correlation across Data and by Channel:
