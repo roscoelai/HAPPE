@@ -35,50 +35,21 @@
 % along with HAPPE. If not, see <https://www.gnu.org/licenses/>.
 
 function [SNR, PeakSNR] = calcSNR_PSNR(preEEG, postEEG, order)
-    % Set up needed variables:
-    NUM = zeros(size(preEEG,1),1) ;
-    DEN = zeros(size(preEEG,1),1) ;
-    SNR = zeros(size(preEEG,1),1) ;
-    PeakSNR = zeros(size(preEEG, 1), 1) ;
+    A_ = (order == 1) * preEEG + (order == 2) * postEEG;
 
     % Calculate mean squared error per channel as intermediate variable:
-    MSE = zeros(size(preEEG, 1), 1);
-    for j=1:size(preEEG, 1)
-        mse = 0;
-        for i=1:length(preEEG)
-            if order == 1; mse = mse + (preEEG(j,i) - postEEG(j,i))^2 ;
-            elseif order == 2; mse = mse + (postEEG(j,i) - preEEG(j,i))^2 ;
-            end
-        end
-        [mse] = mse/length(preEEG) ;
-        MSE(j) = [mse] ;
-    end
+    squared_differences = (preEEG - postEEG) .^ 2;
+    MSE = mean(squared_differences, 2);
 
     % Complete SNR and PSNR calculations:
-    for j = 1:size(preEEG, 1)
-        num = 0 ;
-        den = 0 ;
-        for i=1:length(preEEG)
-            if order == 1; den = den + (preEEG(j,i) - postEEG(j,i))^2 ;
-            elseif order == 2; den = den + (postEEG(j,i) - preEEG(j,i))^2 ;
-            end
-        end
-        DEN(j) = [den] ;
-        for i = 1:length(preEEG)
-            if order == 1; num = num + preEEG(j,i)^2;
-            elseif order == 2; num = num + postEEG(j,i)^2 ;
-            end
-        end
-        NUM(j) = [num];
-        SNR(j) = 20*log10(sqrt(NUM(j))/sqrt(DEN(j)));
-        if order == 1; PeakSNR(j) = 20*log10(max(preEEG(j,:))/sqrt(MSE(j))) ;
-        elseif order == 2; PeakSNR(j) = 20*log10(max(postEEG(j,:))/sqrt(MSE(j)));
-        end
-    end
+    DEN = sum(squared_differences, 2);
+    NUM = sum(A_ .^ 2, 2);
+    SNRs = 20 * log10(realsqrt(NUM) ./ realsqrt(DEN));
+    PeakSNRs = 20 * log10(max(A_, [], 2) ./ realsqrt(MSE));
 
     % SNR over all channels and timepoints:
-    SNR = mean(SNR);
+    SNR = mean(SNRs);
 
     % PSNR over all channels and timepoints:
-    PeakSNR = mean(PeakSNR);
+    PeakSNR = mean(PeakSNRs);
 end
