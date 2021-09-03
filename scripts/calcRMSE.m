@@ -7,8 +7,6 @@
 % Inputs:
 %   preEEG  - EEG signal pre-processing step in channels x samples format
 %   postEEG - EEG signal post-processing step in channels x samples format
-%   order   - The order in which to subtract the pre and post EEGs.
-%             {For 1, preEEG - postEEG; For 2, postEEG - preEEG} 
 %
 % Outputs:
 %   RMSE - Root Mean Squared Error over all channels and timepoints
@@ -31,17 +29,13 @@
 % You should have received a copy of the GNU General Public License
 % along with HAPPE. If not, see <https://www.gnu.org/licenses/>.
 
-function RMSE = calcRMSE(preEEG, postEEG, order)
-    RMSE = zeros(size(preEEG, 1), 1) ;
-    for j = 1:size(preEEG, 1)
-        mse = 0 ;
-        for i = 1:length(preEEG)
-            if order == 1; mse = mse + (preEEG(j,i) - postEEG(j,i))^2 ;
-            elseif order == 2; mse = mse + (postEEG(j,i) - preEEG(j,i))^2 ;
-            end
-        end
-        [rmse] = sqrt(mse/length(preEEG)) ;
-        RMSE(j) = [rmse] ;
-    end
-    RMSE = mean(RMSE) ;
+function RMSE = calcRMSE(preEEG, postEEG)
+    RMSE = mean(realsqrt(mean((preEEG - postEEG) .^ 2, 2)));
+    
+%    % Step-by-step
+%    differences = preEEG - postEEG;
+%    squared_errors = differences .^ 2;
+%    mean_squared_errors = mean(squared_errors, 2);
+%    root_mean_squared_errors = realsqrt(mean_squared_errors);
+%    RMSE = mean(root_mean_squared_errors);
 end
