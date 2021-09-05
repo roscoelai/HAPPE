@@ -2,7 +2,7 @@
 %             particular processing step.
 %
 % Usage: 
-%   >> MAE = calcMAE(preEEG, postEEG, order)
+%   >> MAE = calcMAE(preEEG, postEEG)
 %
 % Inputs:
 %   preEEG  - EEG signal pre-processing step in channels x samples format
@@ -31,10 +31,4 @@
 
 function MAE = calcMAE(preEEG, postEEG)
     MAE = mean(mean(abs(preEEG - postEEG), 2));
-    
-%    % Step-by-step
-%    differences = preEEG - postEEG;
-%    absolute_differences = abs(differences);
-%    mean_absolute_differences = mean(absolute_differences, 2);
-%    MAE = mean(mean_absolute_differences);
 end
