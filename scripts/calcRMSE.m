@@ -2,7 +2,7 @@
 %              particular processing step.
 %
 % Usage: 
-%   >> RMSE = calcRMSE(preEEG, postEEG, order)
+%   >> RMSE = calcRMSE(preEEG, postEEG)
 %
 % Inputs:
 %   preEEG  - EEG signal pre-processing step in channels x samples format
@@ -31,11 +31,4 @@
 
 function RMSE = calcRMSE(preEEG, postEEG)
     RMSE = mean(realsqrt(mean((preEEG - postEEG) .^ 2, 2)));
-    
-%    % Step-by-step
-%    differences = preEEG - postEEG;
-%    squared_errors = differences .^ 2;
-%    mean_squared_errors = mean(squared_errors, 2);
-%    root_mean_squared_errors = realsqrt(mean_squared_errors);
-%    RMSE = mean(root_mean_squared_errors);
 end
