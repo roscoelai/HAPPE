@@ -36,20 +36,13 @@
 
 function [SNR, PeakSNR] = calcSNR_PSNR(preEEG, postEEG, order)
     A_ = (order == 1) * preEEG + (order == 2) * postEEG;
-
-    % Calculate mean squared error per channel as intermediate variable:
-    squared_differences = (preEEG - postEEG) .^ 2;
-    MSE = mean(squared_differences, 2);
-
-    % Complete SNR and PSNR calculations:
-    DEN = sum(squared_differences, 2);
-    NUM = sum(A_ .^ 2, 2);
-    SNRs = 20 * log10(realsqrt(NUM) ./ realsqrt(DEN));
-    PeakSNRs = 20 * log10(max(A_, [], 2) ./ realsqrt(MSE));
-
-    % SNR over all channels and timepoints:
+    SE = (preEEG - postEEG) .^ 2;
+    
+    % SNRs and PeakSNRs per channel
+    SNRs = 20 * log10(realsqrt(sum(A_ .^ 2, 2)) ./ realsqrt(sum(SE, 2)));
+    PeakSNRs = 20 * log10(max(A_, [], 2) ./ realsqrt(mean(SE, 2)));
+    
+    % SNR and PeakSNR over all channels
     SNR = mean(SNRs);
-
-    % PSNR over all channels and timepoints:
     PeakSNR = mean(PeakSNRs);
 end
